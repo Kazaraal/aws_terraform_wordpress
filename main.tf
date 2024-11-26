@@ -45,21 +45,21 @@ resource "aws_subnet" "my_public_subnet" {
 }
 
 # Create an Elastic IP
-resource "aws_eip" "eip_for_database" {
-  domain                    = "vpc"
-}
+# resource "aws_eip" "eip_for_database" {
+#   domain                    = "vpc"
+# }
 
 # Create a nat gateway
-resource "aws_nat_gateway" "nat_gateway_for_database" {
-  allocation_id             = aws_eip.eip_for_database.id
-  subnet_id                 = aws_subnet.my_public_subnet.id
+# resource "aws_nat_gateway" "nat_gateway_for_database" {
+#   allocation_id             = aws_eip.eip_for_database.id
+#   subnet_id                 = aws_subnet.my_public_subnet.id
 
-  tags                      = {
-    name                    = "nat_gateway_for_database"
-  }
+#   tags                      = {
+#     name                    = "nat_gateway_for_database"
+#   }
 
-  depends_on = [ aws_internet_gateway.my_igw ]
-}
+#   depends_on = [ aws_internet_gateway.my_igw ]
+# }
 
 # Create a public route table for the public subnet
 resource "aws_route_table" "my_public_route_table" {
@@ -97,7 +97,7 @@ resource "aws_route_table" "my_private_route_table" {
 
   route {
     cidr_block              = "0.0.0.0/0"
-    nat_gateway_id          = aws_nat_gateway.nat_gateway_for_database.id
+    gateway_id              = aws_internet_gateway.my_igw.id
   }
 
   tags                      = {
